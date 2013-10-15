@@ -1,0 +1,13 @@
+# ================================================================
+# All free users on a specific day in the past (2013-07-08)
+# Schema: hootsuite
+# ================================================================
+
+SELECT
+m.member_id,
+m.plan_id
+m.created_date,
+m.billing_free_trial_start
+FROM member as m
+	WHERE m.created_date < 2013-07-08
+ 	AND (m.billing_free_trial_start IS NULL OR m.billing_free_trial_start >= '2013-07-09')
