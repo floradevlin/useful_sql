@@ -1,0 +1,119 @@
+# ================================================================
+# All Free Users who are actually team members (Pro, Ent or Emp)
+# Schema: hootsuite
+# ================================================================
+
+SELECT A.member_id,
+	A.plan_id,
+	A.payment_member_id,
+	B.plan_id as payment_member_plan_id
+FROM (
+	SELECT m.member_id,
+		m.plan_id,
+		o.organization_id,
+		o.payment_member_id
+	FROM member m
+	INNER JOIN organization_member om
+		ON m.member_id = om.member_id
+	INNER JOIN organization o
+		ON om.organization_id = o.organization_id
+	WHERE m.plan_id = 1
+	) as A
+INNER JOIN member as B
+	ON A.payment_member_id = B.member_id;
+
+
+
+# ================================================================
+# All Free Users who are not team members (Pro, Ent or Emp)
+# Schema: hootsuite
+# ================================================================
+
+
+
+
+# ================================================================
+# All Pro Users who are not team members (Pro, Ent or Emp)
+# Schema: hootsuite
+# ================================================================
+
+
+
+
+# ================================================================
+# All Pro Users including team members
+# Schema: hootsuite
+# ================================================================
+
+
+
+
+# ================================================================
+# All Enterprise Users including team members
+# Schema: hootsuite
+# ================================================================
+
+
+
+
+# ================================================================
+# All Free Users who are inactive
+# Schema: hootsuite
+# ================================================================
+
+
+
+# ================================================================
+# All Users plus their count of SN's (individual and organisation)
+# Schema: hootsuite
+# ================================================================
+
+SELECT	
+	o.payment_member_id as member_id,
+	o.organization_id,
+	sno.twitter_count as twitter_count_org,
+	sno.facebook_count as facebook_count_org,
+	sno.facebook_page_count as facebook_page_count_org,
+	sno.facebook_group_count as facebook_group_count_org,
+	sno.linkedin_count as linkedin_count_org,
+	sno.googleplus_count as google_plus_count_org,
+	sno.total_social_network_count as total_social_network_count_org
+
+FROM hootsuite.organization as o
+	LEFT OUTER JOIN bi_user_statistics.social_network_summary_by_organization as sno
+		on o.organization_id = sno.organization_id
+	
+WHERE o.payment_id = ...
+
+
+
+# ================================================================
+# All trials in may with SN info- date of first created network, NO TAIWAN
+# Schema: hootsuite
+# ================================================================
+
+SELECT m.member_id,
+		m.email,
+		m.created_date,
+		m.billing_free_trial_start,
+		m.plan_id AS members_plan_id,
+		m.aria_status_code,
+		m.aria_billing_period,
+		m.default_timezone,
+		sn.owner_id, 
+		MIN(sn.created_date),
+		sn.type
+
+FROM member AS m 
+	LEFT OUTER JOIN social_network AS sn
+ 		on m.member_id = sn.owner_id
+	LEFT OUTER JOIN bi_user_statistics.timezone_to_region_mapping as tz
+		on m.default_timezone = tz.default_timezone
+ 
+ WHERE m.billing_free_trial_start >= '2013-05-01 00:07:00'
+		AND m.billing_free_trial_start < '2013-06-01 00:07:00'
+		AND tz.country != "Taipei"
+ 
+ GROUP BY m.member_id, sn.owner_id
+ 
+ ORDER BY m.billing_free_trial_start ASC;
