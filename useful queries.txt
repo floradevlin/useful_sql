@@ -53,7 +53,7 @@ WHERE B.plan_id IS NULL;
 
 
 # ================================================================
-# All Pro Users who are not team members (Pro, Ent or Emp)
+# All Pro Users including team members
 # Schema: hootsuite
 # ================================================================
 
@@ -78,11 +78,6 @@ LEFT JOIN member as B
 WHERE A.plan_id = 2 OR B.plan_id =2;
 
 
-
-# ================================================================
-# All Pro Users including team members
-# Schema: hootsuite
-# ================================================================
 
 
 
