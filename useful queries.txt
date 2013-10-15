@@ -80,12 +80,30 @@ WHERE A.plan_id = 2 OR B.plan_id =2;
 
 
 
-
-
 # ================================================================
 # All Enterprise Users including team members
 # Schema: hootsuite
 # ================================================================
+
+
+SELECT A.member_id,
+	A.plan_id,
+	A.payment_member_id,
+	B.plan_id as payment_member_plan_id
+FROM (
+	SELECT m.member_id,
+		m.plan_id,
+		o.organization_id,
+		o.payment_member_id
+	FROM member m
+	LEFT JOIN organization_member om
+		ON m.member_id = om.member_id
+	LEFT JOIN organization o
+		ON om.organization_id = o.organization_id
+	) as A
+LEFT JOIN member as B
+	ON A.payment_member_id = B.member_id
+WHERE A.plan_id = 3 OR B.plan_id =3;
 
 
 
