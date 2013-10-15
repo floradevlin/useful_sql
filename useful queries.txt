@@ -129,7 +129,7 @@ WHERE o.payment_id = ...
 
 
 # ================================================================
-# All trials in may with SN info- date of first created network, NO TAIWAN/NIGERIA
+# All trials in a specific month (MAY) with SN info- date of first created network, NO TAIWAN/NIGERIA
 # Schema: hootsuite
 # ================================================================
 
@@ -158,3 +158,18 @@ FROM member AS m
  GROUP BY m.member_id, sn.owner_id
  
  ORDER BY m.billing_free_trial_start ASC;
+
+
+# ================================================================
+# All free users on a specific day in the past (2013-07-08)
+# Schema: hootsuite
+# ================================================================
+
+SELECT
+m.member_id,
+m.plan_id
+m.created_date,
+m.billing_free_trial_start
+FROM member as m
+	WHERE m.created_date < 2013-07-08
+ 	AND (m.billing_free_trial_start IS NULL OR m.billing_free_trial_start >= '2013-07-09')
