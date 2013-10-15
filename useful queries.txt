@@ -30,6 +30,26 @@ INNER JOIN member as B
 # ================================================================
 
 
+SELECT A.member_id,
+	A.plan_id,
+	A.email
+FROM (
+	SELECT m.member_id,
+		m.plan_id,
+		m.email
+		o.organization_id,
+		o.payment_member_id
+	FROM member m
+	LEFT JOIN organization_member om
+		ON m.member_id = om.member_id
+	LEFT JOIN organization o
+		ON om.organization_id = o.organization_id
+	WHERE m.plan_id = 1
+	) as A
+LEFT JOIN member as B
+	ON A.payment_member_id = B.member_id
+WHERE B.plan_id IS NULL;
+
 
 
 # ================================================================
@@ -63,8 +83,10 @@ INNER JOIN member as B
 
 
 
+
+
 # ================================================================
-# All Users plus their count of SN's (individual and organisation)
+# All Users who are paying members of an organisation with SN org info
 # Schema: hootsuite
 # ================================================================
 
