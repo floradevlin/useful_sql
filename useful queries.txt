@@ -58,6 +58,25 @@ WHERE B.plan_id IS NULL;
 # ================================================================
 
 
+SELECT A.member_id,
+	A.plan_id,
+	A.payment_member_id,
+	B.plan_id as payment_member_plan_id
+FROM (
+	SELECT m.member_id,
+		m.plan_id,
+		o.organization_id,
+		o.payment_member_id
+	FROM member m
+	LEFT JOIN organization_member om
+		ON m.member_id = om.member_id
+	LEFT JOIN organization o
+		ON om.organization_id = o.organization_id
+	) as A
+LEFT JOIN member as B
+	ON A.payment_member_id = B.member_id
+WHERE A.plan_id = 2 OR B.plan_id =2;
+
 
 
 # ================================================================
@@ -110,7 +129,7 @@ WHERE o.payment_id = ...
 
 
 # ================================================================
-# All trials in may with SN info- date of first created network, NO TAIWAN
+# All trials in may with SN info- date of first created network, NO TAIWAN/NIGERIA
 # Schema: hootsuite
 # ================================================================
 
@@ -134,7 +153,7 @@ FROM member AS m
  
  WHERE m.billing_free_trial_start >= '2013-05-01 00:07:00'
 		AND m.billing_free_trial_start < '2013-06-01 00:07:00'
-		AND tz.country != "Taipei"
+		AND tz.country != "Taipei" or tz.country != "Nigeria"
  
  GROUP BY m.member_id, sn.owner_id
  
